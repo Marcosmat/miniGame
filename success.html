@@ -3,32 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Limpeza de Arquivo Infectado! - Introdução</title>
+    <title>Limpeza de Números Infectados - Sucesso</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 20px;
+            background-color: #f0f8ff;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .medal {
+            font-size: 50px;
+            margin: 20px 0;
+        }
+        .points {
+            font-size: 24px;
+            color: green;
+            margin: 10px 0;
+        }
+        .congrats {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4CAF50;
         }
         button {
             padding: 10px 20px;
-            margin: 10px;
+            margin: 20px;
             cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <h1>Limpeza de Números Infectados</h1>
-    <p><strong>Durante a viagem espacial, os sistemas da nave foram tomados por um vírus de IA.<br>
-               que transforma números pares em ímpares.<br>
-               Os cadetes devem usar seus conhecimentos para reprogramar a IA e recuperar o controle da nave.<br>
-               A lista contém números infectados (ímpares).<br>
-               Arraste as tarefas para os campos na ordem correta e pressione "Realizar Limpeza".</strong></p>
-    <button onclick="startGame()">Iniciar Jogo</button>
-    <script>
-        function startGame() {
-            window.location.href = 'game.html';
-        }
-    </script>
+    <div class="container">
+        <div class="congrats">Parabéns! Você ganhou a medalha:</div>
+        <div class="medal">🚀 “Salvador da Nave”</div>
+        <div class="points">5 pontos</div>
+    </div>
+
 </body>
 </html>
