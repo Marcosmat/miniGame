@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limpeza de Números Infectados - Jogo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .list-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .number {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #000;
+            width: 50px;
+            text-align: center;
+        }
+        .infected {
+            background-color: #f88; /* Vermelho claro */
+        }
+        .cleaned {
+            background-color: #8f8; /* Verde */
+        }
+        .drop-zone {
+            border: 2px dashed #aaa;
+            padding: 10px;
+            width: 150px;
+            min-height: 50px;
+            margin: 10px auto;
+        }
+        .drop-zone.filled {
+            border-color: #0f0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            margin: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #aaa;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Limpeza de Números Infectados</h1>
+    <div class="list-container" id="numberList"></div>
+    
+    <h2>Etapas disponíveis</h2>
+    <ul id="steps">
+        <li draggable="true">Percorrer a lista de números</li>
+        <li draggable="true">Adicionar 1 ao número</li>
+        <li draggable="true">Verificar se número é ímpar</li>
+    </ul>
+    
+    <h2>Ordene as tarefas abaixo:</h2>
+    <div id="dropZones">
+        <div class="drop-zone" data-position="0">Etapa 1</div>
+        <div class="drop-zone" data-position="1">Etapa 2</div>
+        <div class="drop-zone" data-position="2">Etapa 3</div>
+    </div>
+    
+    <button onclick="checkSolution()">Realizar Limpeza</button>
+    
+    <script>
+        // Função para gerar números aleatórios
+        function generateRandomNumbers(count, min, max) {
+            const numbers = [];
+            for (let i = 0; i < count; i++) {
+                numbers.push(Math.floor(Math.random() * (max - min + 1)) + min);
+            }
+            return numbers;
+        }
+
+        // Lista inicial de números aleatórios (alguns infectados)
+        const numbers = generateRandomNumbers(10, 1, 30);
+        const numberList = document.getElementById('numberList');
+
+        // Renderiza os números na tela
+        function renderNumbers() {
+            numberList.innerHTML = '';
+            numbers.forEach(num => {
+                const div = document.createElement('div');
+                div.className = 'number ' + (num % 2 !== 0 ? 'infected' : 'cleaned');
+                div.innerText = num;
+                numberList.appendChild(div);
+            });
+        }
+
+        renderNumbers();
+
+        // Habilitar drag-and-drop para as etapas
+        const steps = document.querySelectorAll('#steps li');
+        const dropZones = document.querySelectorAll('.drop-zone');
+
+        steps.forEach(step => {
+            step.addEventListener('dragstart', event => {
+                event.dataTransfer.setData('text/plain', event.target.innerText);
+            });
+        });
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', event => {
+                event.preventDefault();
+                zone.classList.add('hovered');
+            });
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('hovered');
+            });
+            zone.addEventListener('drop', event => {
+                event.preventDefault();
+                zone.classList.remove('hovered');
+
+                const text = event.dataTransfer.getData('text/plain');
+                if (!zone.classList.contains('filled')) {
+                    zone.textContent = text;
+                    zone.classList.add('filled');
+                } else {
+                    const existingText = zone.textContent;
+                    zone.textContent = text;
+                    const step = Array.from(steps).find(step => step.innerText === existingText);
+                    if (step) {
+                        step.style.display = 'block';
+                    }
+                }
+            });
+            zone.addEventListener('click', () => {
+                if (zone.classList.contains('filled')) {
+                    const text = zone.textContent;
+                    const step = Array.from(steps).find(step => step.innerText === text);
+                    if (step) {
+                        step.style.display = 'block';
+                    }
+                    zone.textContent = 'Etapa ' + (parseInt(zone.dataset.position) + 1);
+                    zone.classList.remove('filled');
+                }
+            });
+        });
+
+        // Introdução Educativa
+        window.onload = function() {
+            alert('Bem-vindo ao jogo de Limpeza de Números Infectados! Neste jogo, você aprenderá como a IA pode automatizar tarefas e os riscos associados ao seu uso. Boa sorte, cadete!');
+        }
+
+        // Cenário de Risco
+        function showRiskScenario() {
+            alert('Atenção! Se os números infectados não forem corrigidos, os sistemas da nave podem falhar, resultando em perda de controle e dados corrompidos. Certifique-se de seguir as etapas corretamente!');
+        }
+
+        // Feedback Detalhado
+        function provideFeedback(isCorrect) {
+            if (isCorrect) {
+                alert('Parabéns! Você corrigiu os números infectados e salvou a nave.');
+                window.location.href = 'success.html';
+            } else {
+                showRiskScenario();
+                alert('Ordem incorreta! Tente novamente. Lembre-se de verificar se o número é ímpar antes de adicionar 1.');
+            }
+        }
+
+        // Verificar se a solução do usuário está correta
+        function checkSolution() {
+            const correctSteps = [
+                'Percorrer a lista de números',
+                'Verificar se número é ímpar',
+                'Adicionar 1 ao número'
+            ];
+
+            const userSteps = Array.from(dropZones).map(zone => zone.textContent.trim());
+
+            // Normalizar os textos para evitar erros com espaços ou formatação
+            const normalizedCorrectSteps = correctSteps.map(step => step.toLowerCase());
+            const normalizedUserSteps = userSteps.map(step => step.toLowerCase());
+
+            if (JSON.stringify(normalizedCorrectSteps) === JSON.stringify(normalizedUserSteps)) {
+                cleanNumbers();
+                provideFeedback(true);
+            } else {
+                provideFeedback(false);
+            }
+        }
+
+        // Limpar os números infectados
+        function cleanNumbers() {
+            for (let i = 0; i < numbers.length; i++) {
+                if (numbers[i] % 2 !== 0) {
+                    numbers[i] += 1;
+                }
+            }
+            renderNumbers();
+        }
+    </script>
+</body>
+</html>
