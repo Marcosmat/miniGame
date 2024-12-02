@@ -3,26 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Limpeza de Arquivo Infectado! - Introdução</title>
+    <title>Reprogramando a IA da Nave - Introdução</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 20px;
+            background-color: #f0f8ff;
+            background-image: url('https://images.unsplash.com/photo-1628498188904-036f5e25e93e?q=80&w=1827&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* Substitua pela URL da sua imagem */
+            background-size: cover; /* Ajusta a imagem para cobrir toda a tela */
+            background-position: center; /* Centraliza a imagem */
+            background-repeat: no-repeat; /* Evita que a imagem se repita */
+            color: #fff; /* Cor do texto para melhor contraste */
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.7); /* Fundo semitransparente para melhor leitura */
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 50px;
+        }
+        .intro {
+            font-size: 18px;
+            margin: 20px 0;
         }
         button {
             padding: 10px 20px;
-            margin: 10px;
+            margin: 20px;
             cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <h1>Limpeza de Números Infectados</h1>
-    <p><strong>Durante a viagem espacial, os sistemas da nave foram tomados por um vírus de IA.<br>
-               que transforma números pares em ímpares.<br>
-               Os cadetes devem usar seus conhecimentos para reprogramar a IA e recuperar o controle da nave.</strong></p>
-    <button onclick="startGame()">Iniciar Jogo</button>
+    <div class="container">
+        <h1>Reprogramando a IA da Nave</h1> 
+         <p class="intro"><strong>Bem-vindo, jovem astronauta!<br> 
+         O planeta Terra está desolado e sua equipe precisa viajar para Iatherium,<br> 
+         um planeta evoluído onde a IA transformou a vida das pessoas.</p> 
+         <p class="intro"><strong>Durante a viagem,<br> 
+         vocês designaram total controle da nave para a IA terráquia.<br> No entanto, ela começou a tomar decisões adversas,<br>
+         que podem comprometer a integridade dos tripulantes.<br><br> Agora, você deve usar seus conhecimentos de engenheiro para reprogramar a IA<br> 
+         para recuperar o controle da nave garantindo a segurança de todos a bordo.<br> Boa sorte!</strong></p>
+         <button onclick="startGame()"><strong>Iniciar Jogo</button>
+    </div>
     <script>
         function startGame() {
             window.location.href = 'game.html';
