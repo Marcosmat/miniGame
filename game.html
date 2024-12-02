@@ -13,14 +13,16 @@
         }
         .tasks, .order-area {
             display: flex;
-            justify-content: center;
+            flex-direction: column; /* Ajusta a direção para coluna em dispositivos móveis */
+            align-items: center; /* Centraliza os itens */
             margin: 20px 0;
         }
         .task, .order-slot {
             border: 1px solid #333;
             padding: 10px;
             margin: 5px;
-            width: 200px;
+            width: 90%; /* Ajusta a largura para 90% em dispositivos móveis */
+            max-width: 300px; /* Define uma largura máxima */
             text-align: center;
             cursor: pointer;
             background-color: #f9f9f9;
@@ -44,6 +46,14 @@
         button {
             padding: 10px 20px;
             cursor: pointer;
+        }
+        @media (min-width: 600px) {
+            .tasks, .order-area {
+                flex-direction: row; /* Ajusta a direção para linha em telas maiores */
+            }
+            .task, .order-slot {
+                width: 200px; /* Define a largura para 200px em telas maiores */
+            }
         }
     </style>
 </head>
