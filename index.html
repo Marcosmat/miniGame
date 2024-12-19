@@ -1,63 +1,258 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reprogramando a IA da Nave - Introdução</title>
+    <title>Movendo a Bolinha</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-            background-color: #f0f8ff;
-            background-image: url('https://images.unsplash.com/photo-1628498188904-036f5e25e93e?q=80&w=1827&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* Substitua pela URL da sua imagem */
-            background-size: cover; /* Ajusta a imagem para cobrir toda a tela */
-            background-position: center; /* Centraliza a imagem */
-            background-repeat: no-repeat; /* Evita que a imagem se repita */
-            color: #fff; /* Cor do texto para melhor contraste */
+        #matriz {
+            display: grid;
+            grid-template-columns: repeat(10, 48px);
+            grid-template-rows: repeat(10, 48px);
+            gap: 2px;
+            width: 500px;
+            height: 500px;
+            margin: 20px auto;
+            border: 2px solid #000;
+            box-sizing: border-box;
         }
-        .container {
-            background-color: rgba(0, 0, 0, 0.7); /* Fundo semitransparente para melhor leitura */
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-            margin-top: 50px;
+
+        .celula {
+            width: 48px;
+            height: 48px;
+            background-color: lightgray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: black;
+            font-weight: bold;
         }
-        .intro {
-            font-size: 18px;
-            margin: 20px 0;
+
+        .bolinha {
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        button {
-            padding: 10px 20px;
-            margin: 20px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
+
+        .bolinha-aleatoria {
+            width: 30px;
+            height: 30px;
+            background-color: blue;
+            border-radius: 50%;
+        }
+
+        .mini {
+            width: 20px;
+            height: 20px;
+            background-color: black;
+            border-radius: 50%;
+        }
+
+        .obstaculo {
+            width: 30px;
+            height: 30px;
+            background-color: black;
             border-radius: 5px;
-            font-size: 16px;
         }
-        button:hover {
-            background-color: #45a049;
+
+        #coordenadas {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        #comandos {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #entradaComando {
+            width: 300px;
+            padding: 10px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Reprogramando a IA da Nave</h1> 
-         <p class="intro"><strong>Bem-vindo, jovem astronauta!<br> 
-         O planeta Terra está desolado e sua equipe precisa viajar para Iatherium,<br> 
-         um planeta evoluído onde a IA transformou a vida das pessoas.</p> 
-         <p class="intro"><strong>Durante a viagem,<br> 
-         vocês designaram total controle da nave para a IA terráquia.<br> No entanto, ela começou a tomar decisões adversas,<br>
-         que podem comprometer a integridade dos tripulantes.<br><br> Agora, você deve usar seus conhecimentos de engenheiro para reprogramar a IA<br> 
-         para recuperar o controle da nave garantindo a segurança de todos a bordo.<br> Boa sorte!</strong></p>
-         <button onclick="startGame()"><strong>Iniciar Jogo</button>
+    <div id="matriz"></div>
+    <div id="coordenadas">Coordenadas: X = 0, Y = 0</div>
+
+    <div id="comandos">
+        <p>Comandos disponíveis: <br>
+            descer(n), subir(n), esquerda(n), direita(n), capturar()
+        </p>
+        <input type="text" id="entradaComando" placeholder="Digite os comandos">
+        <button onclick="executarComandos()">Executar</button>
     </div>
+
     <script>
-        function startGame() {
-            window.location.href = 'game.html';
+        let x = 0, y = 0;  // Posição inicial da bolinha vermelha
+        let carregandoPreta = false;
+        let jogoFinalizado = false;
+
+        const gerarPosicaoAleatoria = () => ({
+            x: Math.floor(Math.random() * 10),
+            y: Math.floor(Math.random() * 10)
+        });
+
+        const gerarObstaculos = () => {
+            const obstaculos = [];
+            while (obstaculos.length < 5) {
+                const pos = gerarPosicaoAleatoria();
+                if ((pos.x !== x || pos.y !== y) && 
+                    (pos.x !== bolinhaPreta.x || pos.y !== bolinhaPreta.y) &&
+                    (pos.x !== bolinhaAzul.x || pos.y !== bolinhaAzul.y)) {
+                    obstaculos.push(pos);
+                }
+            }
+            return obstaculos;
+        };
+
+        let bolinhaPreta = gerarPosicaoAleatoria();
+        let bolinhaAzul = gerarPosicaoAleatoria();
+        let obstaculos = gerarObstaculos();
+
+        const matriz = document.getElementById('matriz');
+        for (let i = 0; i < 100; i++) {
+            const celula = document.createElement('div');
+            celula.classList.add('celula');
+            matriz.appendChild(celula);
         }
+
+        const celulas = document.querySelectorAll('.celula');
+
+        const atualizarCoordenadas = () => {
+            document.getElementById('coordenadas').innerText = `Coordenadas: X = ${x}, Y = ${y}`;
+        };
+
+        const desenharMatriz = () => {
+            celulas.forEach((celula, index) => {
+                const coordX = Math.floor(index / 10);
+                const coordY = index % 10;
+
+                celula.innerHTML = '';
+
+                if (jogoFinalizado && coordX === bolinhaAzul.x && coordY === bolinhaAzul.y) {
+                    celula.innerHTML = '<div class="bolinha"><div class="mini"></div></div><div class="bolinha-aleatoria"></div>';
+                } else if (coordX === x && coordY === y) {
+                    if (carregandoPreta) {
+                        celula.innerHTML = '<div class="bolinha"><div class="mini"></div></div>';
+                    } else {
+                        celula.innerHTML = '<div class="bolinha"></div>';
+                    }
+                } else if (coordX === bolinhaPreta.x && coordY === bolinhaPreta.y && !carregandoPreta) {
+                    celula.innerHTML = '<div class="mini"></div>';
+                } else if (coordX === bolinhaAzul.x && coordY === bolinhaAzul.y) {
+                    celula.innerHTML = '<div class="bolinha-aleatoria"></div>';
+                } else if (obstaculos.some(obstaculo => obstaculo.x === coordX && obstaculo.y === coordY)) {
+                    celula.innerHTML = '<div class="obstaculo"></div>';
+                }
+            });
+        };
+
+        const executarComandos = () => {
+            const comandos = document.getElementById('entradaComando').value.trim().toLowerCase().split(',');
+
+            let i = 0;
+
+            const processarComando = () => {
+                if (i < comandos.length) {
+                    const comando = comandos[i].trim();
+                    const match = comando.match(/^(descer|subir|esquerda|direita)\((\d+)\)$/);
+
+                    if (match) {
+                        const direcao = match[1];
+                        const quantidade = parseInt(match[2]);
+                        moverGradualmente(direcao, quantidade, () => {
+                            i++;
+                            processarComando();
+                        });
+                    } else if (comando === 'capturar()') {
+                        if (x === bolinhaPreta.x && y === bolinhaPreta.y && !carregandoPreta) {
+                            carregandoPreta = true;
+                            bolinhaPreta = { x: -1, y: -1 }; // Remove a bolinha preta da matriz
+                            desenharMatriz();
+                        } else {
+                            alert('Comando inválido: Não há bolinha preta para capturar aqui!');
+                        }
+                        i++;
+                        processarComando();
+                    } else {
+                        alert('Comando inválido!');
+                        i++;
+                        processarComando();
+                    }
+                } else {
+                    if (carregandoPreta && x === bolinhaAzul.x && y === bolinhaAzul.y) {
+                        alert('Parabéns! Você completou o objetivo!');
+                        jogoFinalizado = true;
+                        desenharMatriz();
+                    } else {
+                        alert('Objetivo não alcançado!');
+                        resetarJogo();
+                    }
+                }
+            };
+
+            processarComando();
+            document.getElementById('entradaComando').value = '';
+        };
+
+        const moverGradualmente = (direcao, quantidade, callback) => {
+            let passos = 0;
+            const intervalo = setInterval(() => {
+                let novoX = x, novoY = y;
+
+                if (direcao === 'descer') novoX++;
+                else if (direcao === 'subir') novoX--;
+                else if (direcao === 'direita') novoY++;
+                else if (direcao === 'esquerda') novoY--;
+
+                if (obstaculos.some(obstaculo => obstaculo.x === novoX && obstaculo.y === novoY)) {
+                    clearInterval(intervalo);
+                    alert('Colisão com obstáculo!');
+                    resetarJogo();
+                    return;
+                }
+
+                x = novoX;
+                y = novoY;
+                passos++;
+
+                desenharMatriz();
+                atualizarCoordenadas();
+
+                if (passos >= quantidade) {
+                    clearInterval(intervalo);
+                    callback();
+                }
+            }, 200);
+        };
+
+        const resetarJogo = () => {
+            x = 0;
+            y = 0;
+            carregandoPreta = false;
+            jogoFinalizado = false;
+            bolinhaPreta = gerarPosicaoAleatoria();
+            bolinhaAzul = gerarPosicaoAleatoria();
+            obstaculos = gerarObstaculos();
+            desenharMatriz();
+            atualizarCoordenadas();
+        };
+
+        desenharMatriz();
+        atualizarCoordenadas();
     </script>
 </body>
 </html>
