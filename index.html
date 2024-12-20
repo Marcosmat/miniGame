@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movendo a Bolinha</title>
+    <title>Game Ball - Aprendendo a Programar</title>
     <style>
         #matriz {
             display: grid;
@@ -17,7 +17,7 @@
             box-sizing: border-box;
         }
 
-        .celula {
+        .celula_matriz {
             width: 48px;
             height: 48px;
             background-color: lightgray;
@@ -29,26 +29,29 @@
             font-weight: bold;
         }
 
-        .bolinha {
+        .bolinhaVermelha {
             width: 30px;
             height: 30px;
-            background-color: red;
+            background-color: #E53935;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .bolinha-aleatoria {
+        .bolinhaAzul {
             width: 30px;
             height: 30px;
             background-color: blue;
             border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .mini {
-            width: 20px;
-            height: 20px;
+            width: 15px;
+            height: 15px;
             background-color: black;
             border-radius: 50%;
         }
@@ -58,13 +61,6 @@
             height: 30px;
             background-color: black;
             border-radius: 5px;
-        }
-
-        #coordenadas {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 16px;
-            font-weight: bold;
         }
 
         #comandos {
@@ -85,20 +81,25 @@
 </head>
 <body>
     <div id="matriz"></div>
-    <div id="coordenadas">Coordenadas: X = 0, Y = 0</div>
 
     <div id="comandos">
+        <div id="casas-percorridas">Casas percorridas: 0</div>
+        <div id="nfuncs">Funções utilizadas: 0</div>
         <p>Comandos disponíveis: <br>
             descer(n), subir(n), esquerda(n), direita(n), capturar()
         </p>
+        <br><button onclick="info()" style="font-weight: bold;">?</button>
+        <button onclick="novoJogo()" style="font-weight: bold; background-color: lightblue; color: black;">Novo jogo</button>
         <input type="text" id="entradaComando" placeholder="Digite os comandos">
-        <button onclick="executarComandos()">Executar</button>
+        <button onclick="executarComandos()" style="font-weight: bold; background-color: lightgreen; color: black; padding: 12px 10px;">Executar</button>
     </div>
 
     <script>
         let x = 0, y = 0;  // Posição inicial da bolinha vermelha
         let carregandoPreta = false;
         let jogoFinalizado = false;
+        let nmrCasasPercorridas = 0;
+        let nmrFuncUtilizadas = 0;
 
         const gerarPosicaoAleatoria = () => ({
             x: Math.floor(Math.random() * 10),
@@ -121,43 +122,56 @@
         let bolinhaPreta = gerarPosicaoAleatoria();
         let bolinhaAzul = gerarPosicaoAleatoria();
         let obstaculos = gerarObstaculos();
+        let entrega = false;
 
         const matriz = document.getElementById('matriz');
         for (let i = 0; i < 100; i++) {
             const celula = document.createElement('div');
-            celula.classList.add('celula');
+            celula.classList.add('celula_matriz');
             matriz.appendChild(celula);
         }
 
-        const celulas = document.querySelectorAll('.celula');
-
-        const atualizarCoordenadas = () => {
-            document.getElementById('coordenadas').innerText = `Coordenadas: X = ${x}, Y = ${y}`;
-        };
+        const celulas = document.querySelectorAll('.celula_matriz');
 
         const desenharMatriz = () => {
             celulas.forEach((celula, index) => {
                 const coordX = Math.floor(index / 10);
                 const coordY = index % 10;
 
-                celula.innerHTML = '';
+                celula.innerHTML = ''; // Limpa a célula
 
                 if (jogoFinalizado && coordX === bolinhaAzul.x && coordY === bolinhaAzul.y) {
-                    celula.innerHTML = '<div class="bolinha"><div class="mini"></div></div><div class="bolinha-aleatoria"></div>';
-                } else if (coordX === x && coordY === y) {
                     if (carregandoPreta) {
-                        celula.innerHTML = '<div class="bolinha"><div class="mini"></div></div>';
+                                    // Quando a bolinha vermelha com a bolinha preta chega à bolinha azul, entrega-a
+                                    celula.innerHTML = `<div class="bolinhaVermelha"></div>
+                                                        <div class="bolinhaAzul">
+                                                          <div class="mini"></div>
+                                                        </div>`;
                     } else {
-                        celula.innerHTML = '<div class="bolinha"></div>';
+                        // Apenas a bolinha azul permanece
+                        celula.innerHTML = '<div class="bolinhaAzul"></div>';
+                    }
+                    entrega = true;
+                } else if (coordX === x && coordY === y) {
+                    // Desenha a bolinha vermelha na posição atual
+                    if (carregandoPreta) {
+                        celula.innerHTML = '<div class="bolinhaVermelha"><div class="mini"></div></div>';
+                    } else {
+                        celula.innerHTML = '<div class="bolinhaVermelha"></div>';
                     }
                 } else if (coordX === bolinhaPreta.x && coordY === bolinhaPreta.y && !carregandoPreta) {
+                    // Desenha a bolinha preta
                     celula.innerHTML = '<div class="mini"></div>';
                 } else if (coordX === bolinhaAzul.x && coordY === bolinhaAzul.y) {
-                    celula.innerHTML = '<div class="bolinha-aleatoria"></div>';
+                    // Desenha a bolinha azul na posição
+                    celula.innerHTML = '<div class="bolinhaAzul"></div>';
                 } else if (obstaculos.some(obstaculo => obstaculo.x === coordX && obstaculo.y === coordY)) {
+                    // Desenha os obstáculos
                     celula.innerHTML = '<div class="obstaculo"></div>';
                 }
             });
+             document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
+             document.getElementById('nfuncs').textContent = `Funções utilizadas: ${nmrFuncUtilizadas}`;
         };
 
         const executarComandos = () => {
@@ -173,6 +187,7 @@
                     if (match) {
                         const direcao = match[1];
                         const quantidade = parseInt(match[2]);
+                        nmrFuncUtilizadas++;
                         moverGradualmente(direcao, quantidade, () => {
                             i++;
                             processarComando();
@@ -183,29 +198,32 @@
                             bolinhaPreta = { x: -1, y: -1 }; // Remove a bolinha preta da matriz
                             desenharMatriz();
                         } else {
-                            alert('Comando inválido: Não há bolinha preta para capturar aqui!');
+                            alert('Erro ao capturar bolinha em local vazio!');
                         }
                         i++;
                         processarComando();
                     } else {
-                        alert('Comando inválido!');
+                        alert('Erro de sintaxe! (Comando inválido)');
                         i++;
                         processarComando();
                     }
                 } else {
                     if (carregandoPreta && x === bolinhaAzul.x && y === bolinhaAzul.y) {
-                        alert('Parabéns! Você completou o objetivo!');
                         jogoFinalizado = true;
                         desenharMatriz();
+                        if (entrega === true) {
+                            setTimeout(() => {
+                                alert('Parabéns! Você completou o objetivo!');
+                            }, 100); // Pequeno atraso de 100ms
+                        }
                     } else {
-                        alert('Objetivo não alcançado!');
-                        resetarJogo();
+                        alert('Objetivo não alcançado! Voltando ao inicio!');
+                        voltarInicio();
                     }
                 }
             };
 
             processarComando();
-            document.getElementById('entradaComando').value = '';
         };
 
         const moverGradualmente = (direcao, quantidade, callback) => {
@@ -220,17 +238,17 @@
 
                 if (obstaculos.some(obstaculo => obstaculo.x === novoX && obstaculo.y === novoY)) {
                     clearInterval(intervalo);
-                    alert('Colisão com obstáculo!');
-                    resetarJogo();
+                    alert('Colisão com obstáculo! Voltando ao início!');
+                    voltarInicio();
                     return;
                 }
 
                 x = novoX;
                 y = novoY;
+                nmrCasasPercorridas++;
                 passos++;
 
                 desenharMatriz();
-                atualizarCoordenadas();
 
                 if (passos >= quantidade) {
                     clearInterval(intervalo);
@@ -239,7 +257,7 @@
             }, 200);
         };
 
-        const resetarJogo = () => {
+        const novoJogo = () => {
             x = 0;
             y = 0;
             carregandoPreta = false;
@@ -247,12 +265,40 @@
             bolinhaPreta = gerarPosicaoAleatoria();
             bolinhaAzul = gerarPosicaoAleatoria();
             obstaculos = gerarObstaculos();
+            nmrCasasPercorridas = 0;
+            nmrFuncUtilizadas = 0;
             desenharMatriz();
-            atualizarCoordenadas();
+            document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
+            document.getElementById('nfuncs').textContent = `Funções utilizadas: ${nmrFuncUtilizadas}`;
+            limparCampo();
+
+        };
+
+        const voltarInicio = () => {
+            x = 0;
+            y = 0;
+            carregandoPreta = false;
+            jogoFinalizado = false;
+            desenharMatriz();
+            nmrCasasPercorridas = 0;
+            nmrFuncUtilizadas = 0;
+            document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
+            document.getElementById('nfuncs').textContent = `Funções utilizadas: ${nmrFuncUtilizadas}`;
+        };
+        
+        const limparCampo = () => {
+            document.getElementById('entradaComando').value = '';
+        };
+
+        const info = () => {
+            alert(
+                  'Programe a bolinha vermelha usando as funções disponíveis, \n' +
+                  'para que ela pegue a bolinha preta \n' +
+                  'e a entregue à bolinha azul.'
+            );
         };
 
         desenharMatriz();
-        atualizarCoordenadas();
     </script>
 </body>
 </html>
