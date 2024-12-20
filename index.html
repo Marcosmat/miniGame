@@ -131,6 +131,7 @@
         };
 
         let bolinhaPreta = gerarPosicaoAleatoria();
+        let guardaPosBolinhaPreta = bolinhaPreta;
         let bolinhaAzul = gerarPosicaoAleatoria();
         let obstaculos = gerarObstaculos();
         let entrega = false;
@@ -265,7 +266,7 @@
                     clearInterval(intervalo);
                     callback();
                 }
-            }, 200);
+            }, 250);
         };
 
         const novoJogo = () => {
@@ -290,6 +291,7 @@
             y = 0;
             carregandoPreta = false;
             jogoFinalizado = false;
+            bolinhaPreta = guardaPosBolinhaPreta;
             desenharMatriz();
             nmrCasasPercorridas = 0;
             nmrFuncUtilizadas = 0;
