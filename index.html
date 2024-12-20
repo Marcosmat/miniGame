@@ -131,7 +131,7 @@
         };
 
         let bolinhaPreta = gerarPosicaoAleatoria();
-        let guardaPosBolinhaPreta = bolinhaPreta;
+        let guardaPosBolinhaPreta = {...bolinhaPreta};
         let bolinhaAzul = gerarPosicaoAleatoria();
         let obstaculos = gerarObstaculos();
         let entrega = false;
@@ -210,14 +210,16 @@
                             bolinhaPreta = { x: -1, y: -1 }; // Remove a bolinha preta da matriz
                             desenharMatriz();
                         } else {
-                            alert('Erro ao capturar bolinha em local vazio!');
+                            alert('Erro ao capturar bolinha em local vazio! Reiniciando...');
+                            voltarInicio();
+                            return;
                         }
                         i++;
                         processarComando();
                     } else {
                         alert('Erro de sintaxe! (Comando inválido)');
-                        i++;
-                        processarComando();
+                        voltarInicio();
+                        return;
                     }
                 } else {
                     if (carregandoPreta && x === bolinhaAzul.x && y === bolinhaAzul.y) {
@@ -229,7 +231,7 @@
                             }, 100); // Pequeno atraso de 100ms
                         }
                     } else {
-                        alert('Objetivo não alcançado! Voltando ao inicio!');
+                        alert('Objetivo não alcançado! Voltando ao inicio...');
                         voltarInicio();
                     }
                 }
@@ -277,6 +279,7 @@
             bolinhaPreta = gerarPosicaoAleatoria();
             bolinhaAzul = gerarPosicaoAleatoria();
             obstaculos = gerarObstaculos();
+            guardaPosBolinhaPreta = { x: bolinhaPreta.x, y: bolinhaPreta.y };
             nmrCasasPercorridas = 0;
             nmrFuncUtilizadas = 0;
             desenharMatriz();
@@ -291,7 +294,7 @@
             y = 0;
             carregandoPreta = false;
             jogoFinalizado = false;
-            bolinhaPreta = guardaPosBolinhaPreta;
+            bolinhaPreta = { x: guardaPosBolinhaPreta.x, y: guardaPosBolinhaPreta.y };
             desenharMatriz();
             nmrCasasPercorridas = 0;
             nmrFuncUtilizadas = 0;
@@ -317,6 +320,7 @@
 
 
         desenharMatriz();
+        
     </script>
 </body>
 </html>
