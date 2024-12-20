@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Ball - Aprendendo a Programar</title>
     <style>
+    body {
+    	background-color: #FFFFE0;
+    	font-family: Arial, sans-serif; /* Tipografia padrão */
+    	margin: 0;
+    	padding: 0;
+    	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+    	justify-content: center;
+    }
+
         #matriz {
             display: grid;
             grid-template-columns: repeat(10, 48px);
@@ -90,7 +101,7 @@
         </p>
         <br><button onclick="info()" style="font-weight: bold;">?</button>
         <button onclick="novoJogo()" style="font-weight: bold; background-color: lightblue; color: black;">Novo jogo</button>
-        <input type="text" id="entradaComando" placeholder="Digite os comandos">
+        <input type="text" id="entradaComando" placeholder="Digite os comandos aqui">
         <button onclick="executarComandos()" style="font-weight: bold; background-color: lightgreen; color: black; padding: 12px 10px;">Executar</button>
     </div>
 
@@ -175,7 +186,7 @@
         };
 
         const executarComandos = () => {
-            const comandos = document.getElementById('entradaComando').value.trim().toLowerCase().split(',');
+            const comandos = document.getElementById('entradaComando').value.trim().toLowerCase().replace(/\s+/g, '').split(',');
 
             let i = 0;
 
@@ -290,13 +301,18 @@
             document.getElementById('entradaComando').value = '';
         };
 
-        const info = () => {
-            alert(
-                  'Programe a bolinha vermelha usando as funções disponíveis, \n' +
-                  'para que ela pegue a bolinha preta \n' +
-                  'e a entregue à bolinha azul.'
-            );
-        };
+       const info = () => {
+               alert(
+                    'Bem-vindo(a) ao Game Ball!\n' +
+                    'Seu objetivo é entregar a bolinha preta à bolinha azul,'+ 
+                    'utilizando os comandos disponíveis.\n' +
+                    'Dicas importantes:\n' +
+                    '- Use sua lógica para planejar os movimentos com antecedência;\n' +
+                    '- Preste atenção à sintaxe dos comandos;\n' +
+                    '- Insira os comandos um após o outro, separados por vírgula.\n\n'
+               );
+       };
+
 
         desenharMatriz();
     </script>
