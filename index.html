@@ -95,7 +95,6 @@
 
     <div id="comandos">
         <div id="casas-percorridas">Casas percorridas: 0</div>
-        <div id="nfuncs">Funções utilizadas: 0</div>
         <p>Comandos disponíveis: <br>
             descer(n), subir(n), esquerda(n), direita(n), capturar()
         </p><br><button onclick="info()" style="background-color: black; color: white; font-weight: bold; font-size: 20px; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;">?</button>
@@ -110,7 +109,6 @@
         let carregandoPreta = false;
         let jogoFinalizado = false;
         let nmrCasasPercorridas = 0;
-        let nmrFuncUtilizadas = 0;
 
         const gerarPosicaoAleatoria = () => ({
             x: Math.floor(Math.random() * 10),
@@ -182,13 +180,12 @@
                     celula.innerHTML = '<div class="obstaculo"></div>';
                 }
             });
-             document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
-             document.getElementById('nfuncs').textContent = `Funções utilizadas: ${nmrFuncUtilizadas}`;
+             document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;s
         };
 
         const executarComandos = () => {
             const comandos = document.getElementById('entradaComando').value.trim().toLowerCase().replace(/\s+/g, '').split(',');
-
+         
             let i = 0;
 
             const processarComando = () => {
@@ -199,12 +196,12 @@
                     if (match) {
                         const direcao = match[1];
                         const quantidade = parseInt(match[2]);
-                        nmrFuncUtilizadas++;
                         moverGradualmente(direcao, quantidade, () => {
                             i++;
                             processarComando();
                         });
                     } else if (comando === 'capturar()') {
+
                         if (x === bolinhaPreta.x && y === bolinhaPreta.y && !carregandoPreta) {
                             carregandoPreta = true;
                             bolinhaPreta = { x: -1, y: -1 }; // Remove a bolinha preta da matriz
@@ -281,10 +278,8 @@
             obstaculos = gerarObstaculos();
             guardaPosBolinhaPreta = { x: bolinhaPreta.x, y: bolinhaPreta.y };
             nmrCasasPercorridas = 0;
-            nmrFuncUtilizadas = 0;
             desenharMatriz();
             document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
-            document.getElementById('nfuncs').textContent = `Funções utilizadas: ${nmrFuncUtilizadas}`;
             limparCampo();
 
         };
@@ -297,9 +292,7 @@
             bolinhaPreta = { x: guardaPosBolinhaPreta.x, y: guardaPosBolinhaPreta.y };
             desenharMatriz();
             nmrCasasPercorridas = 0;
-            nmrFuncUtilizadas = 0;
             document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
-            document.getElementById('nfuncs').textContent = `Funções utilizadas: ${nmrFuncUtilizadas}`;
         };
         
         const limparCampo = () => {
