@@ -278,8 +278,18 @@
                             case "direita":
                             y += passos;
                             break;
-                        }                
+                        }    
+                        if(!estaDentroDosLimites(x,y)){
+                            alert("Fora dos limites! Reiniciando...");
+                            voltarInicio();
+                            return;                            
+                        }
                         
+                        if(temObstaculo(x, y)){
+                            alert("Colisão no percurso! Reiniciando...");
+                            voltarInicio(); 
+                            return;
+                        }
         
                         desenharMatriz();
                         i++;
@@ -303,6 +313,13 @@
                                     
                                     if (nivelAtual === 2 || nivelAtual === 3) {
                                         document.getElementById('cmds').textContent ="descer(n), subir(n), esquerda(n), direita(n), capturar(), pular(comando(n))";
+                                        setTimeout(() => {
+                                            alert(`Parabéns! Você completou o nível ${nivelAtual}!\nPróximo nível: ${nivelAtual + 1}\n\nFunção desbloqueada: pular(comando(n))`);
+                                            jogoFinalizado = false;
+                                            carregarNovoNivel();
+                                        
+                                        }, 100);
+                                        return;
                                     }                                    
                                     
                                     
@@ -345,23 +362,43 @@
             let passos = 0;
             const intervalo = setInterval(() => {
                 let novoX = x, novoY = y;
-
-                if (direcao === 'descer') novoX++;
-                else if (direcao === 'subir') novoX--;
-                else if (direcao === 'direita') novoY++;
-                else if (direcao === 'esquerda') novoY--;
-
-                if (obstaculos.some(obstaculo => obstaculo.x === novoX && obstaculo.y === novoY)) {
-                    clearInterval(intervalo);
-                    alert('Colisão em obstáculo! Reiniciando...');
-                    voltarInicio();
+        
+                // Calcula o próximo movimento
+                switch (direcao) {
+                    case 'descer': novoX++; break;
+                    case 'subir': novoX--; break;
+                    case 'direita': novoY++; break;
+                    case 'esquerda': novoY--; break;
+                    default:
+                        clearInterval(intervalo);
+                        alert("Erro na direção! Reiniciando...");
+                        voltarInicio();
+                        return;
                 }
-
+        
+                // Verifica se está dentro dos limites
+                if (!estaDentroDosLimites(novoX, novoY)) {
+                    clearInterval(intervalo);
+                    alert("Fora dos limites! Reiniciando...");
+                    voltarInicio();
+                    return;
+                }
+        
+                // Verifica colisões com obstáculos
+                if (temObstaculo(novoX, novoY)) {
+                    clearInterval(intervalo);
+                    alert("Colisão no percurso! Reiniciando...");
+                    voltarInicio();
+                    return;
+                }
+        
+                // Atualiza a posição
                 x = novoX;
                 y = novoY;
                 nmrCasasPercorridas++;
                 passos++;
-
+        
+                // Verifica se atingiu o número de passos necessário
                 if (passos >= quantidade) {
                     clearInterval(intervalo);
                     desenharMatriz();
@@ -371,6 +408,7 @@
                 }
             }, 250);
         };
+
 
         const novoJogo = () => {
             x = 0;
@@ -444,6 +482,16 @@
             // Atualizar o desenho da matriz
             desenharMatriz();
         };
+        
+        const estaDentroDosLimites = (novoX, novoY) => {
+            return novoX >= 0 && novoX < niveis[nivelAtual].tamanho &&
+                     novoY >= 0 && novoY < niveis[nivelAtual].tamanho;
+        };
+        
+        const temObstaculo = (novoX, novoY) => {
+            return obstaculos.some(obstaculo => obstaculo.x === novoX && obstaculo.y === novoY);
+        };        
+        
 
         ajustarMatriz();
         desenharMatriz();
@@ -451,10 +499,4 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
 
