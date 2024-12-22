@@ -16,13 +16,15 @@
     	justify-content: center;
     }
 
-        #matriz {
-            display: grid;
-            gap: 2px;
-            margin: 20px auto;
-            border: 2px solid #000;
-            box-sizing: border-box;
-        }
+
+#matriz {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    margin-bottom: -2px; /* Coloca a parte inferior da matriz colada ao símbolo */
+}
 
         .celula_matriz {
             width: 48px;
@@ -90,6 +92,7 @@
     <div id="matriz"></div>
 
     <div id="comandos">
+
 	<div id="nivel-atual">Nível atual: 1</div>
         <div id="casas-percorridas">Casas percorridas: 0</div>
         <p>Comandos disponíveis: <br>
@@ -337,6 +340,7 @@
                                         alert('Parabéns! Você completou todos níveis!');
                                     }, 100);  
                                     limparCampo();
+				    document.getElementById('entradaComando').disabled = true;
                                 }
                             }
                         }, 100);
@@ -423,6 +427,7 @@
             desenharMatriz();
             document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
             limparCampo();
+	    document.getElementById('entradaComando').disabled = false;
 
         };
 
