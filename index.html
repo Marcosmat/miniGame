@@ -337,6 +337,10 @@
         };
 
 
+
+
+
+
         const moverGradualmente = (direcao, quantidade, callback) => {
             let passos = 0;
             const intervalo = setInterval(() => {
@@ -389,7 +393,7 @@
             y = 0;
             carregandoPreta = false;
             jogoFinalizado = false;
-            bolinhaPreta = { x: guardaPosBolinhaPreta.x, y: guardaPosBolinhaPreta.y };
+            bolinhaPreta = { x: niveis[nivelAtual].bolinhaPreta.x, y: niveis[nivelAtual].bolinhaPreta.y };
             desenharMatriz();
             nmrCasasPercorridas = 0;
             document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
@@ -447,3 +451,10 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
