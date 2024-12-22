@@ -60,7 +60,7 @@
             width: 15px;
             height: 15px;
             background-color: black;
-            border-radius: 50%;
+            border-radius: 0;
         }
 
         .obstaculo {
@@ -104,7 +104,7 @@
 
     <script>
         let x = 0, y = 0;  // Posição inicial da bolinha vermelha
-        let carregandoPreta = false;
+        let carregandoObjeto = false;
         let jogoFinalizado = false;
         let nmrCasasPercorridas = 0;
         let nivelAtual = 0;
@@ -112,19 +112,19 @@
         const niveis = [
             {
                 tamanho: 5,
-                bolinhaPreta: { x: 1, y: 1 },
+                quadradinho: { x: 1, y: 1 },
                 bolinhaAzul: { x: 2, y: 2 },
                 obstaculos: []
             },
             {
                 tamanho: 5,
-                bolinhaPreta: { x: 3, y: 4 },
+                quadradinho: { x: 3, y: 4 },
                 bolinhaAzul: { x: 4, y: 3 },
                 obstaculos: [{ x: 3, y: 3 }, { x: 2, y: 3 }, { x: 4, y: 4 }]
             },
             {
                 tamanho: 10,
-                bolinhaPreta: { x: 8, y: 6 },
+                quadradinho: { x: 8, y: 6 },
                 bolinhaAzul: { x: 6, y: 7 },
                 obstaculos: [
                     { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 1, y: 3 },
@@ -144,8 +144,8 @@
             return obstaculos;
         };
 
-        let bolinhaPreta = niveis[nivelAtual].bolinhaPreta;
-        let guardaPosBolinhaPreta = {...bolinhaPreta};
+        let quadradinho = niveis[nivelAtual].quadradinho;
+        let guardaPosquadradinho = {...quadradinho};
         let bolinhaAzul = niveis[nivelAtual].bolinhaAzul;
         let obstaculos = gerarObstaculos();
         let entrega = false;
@@ -181,7 +181,7 @@
         
                 // Desenha a bolinha azul e vermelha com base nas posições no nível
                 if (jogoFinalizado && coordX === nivel.bolinhaAzul.x && coordY === nivel.bolinhaAzul.y) {
-                    if (carregandoPreta) {
+                    if (carregandoObjeto) {
                         celula.innerHTML = `<div class="bolinhaVermelha"></div>
                                             <div class="bolinhaAzul">
                                               <div class="mini"></div>
@@ -191,12 +191,12 @@
                     }
                     entrega = true;
                 } else if (coordX === x && coordY === y) {
-                    if (carregandoPreta) {
+                    if (carregandoObjeto) {
                         celula.innerHTML = '<div class="bolinhaVermelha"><div class="mini"></div></div>';
                     } else {
                         celula.innerHTML = '<div class="bolinhaVermelha"></div>';
                     }
-                } else if (coordX === nivel.bolinhaPreta.x && coordY === nivel.bolinhaPreta.y && !carregandoPreta) {
+                } else if (coordX === nivel.quadradinho.x && coordY === nivel.quadradinho.y && !carregandoObjeto) {
                     celula.innerHTML = '<div class="mini"></div>';
                 } else if (coordX === nivel.bolinhaAzul.x && coordY === nivel.bolinhaAzul.y) {
                     celula.innerHTML = '<div class="bolinhaAzul"></div>';
@@ -243,9 +243,9 @@
                             processarComando();
                         });
                     } else if (comando === 'capturar()') {
-                        if (x === bolinhaPreta.x && y === bolinhaPreta.y && !carregandoPreta) {
-                            carregandoPreta = true;
-                            bolinhaPreta = { x: -1, y: -1 }; // Remove a bolinha preta da matriz
+                        if (x === quadradinho.x && y === quadradinho.y && !carregandoObjeto) {
+                            carregandoObjeto = true;
+                            quadradinho = { x: -1, y: -1 }; // Remove o quadradinho da matriz
                         } else {
                             alert('Erro ao capturar bolinha em local vazio! Reiniciando...');
                             voltarInicio();
@@ -303,7 +303,7 @@
                         return;
                     }
                 } else {
-                    if (carregandoPreta && x === bolinhaAzul.x && y === bolinhaAzul.y) {
+                    if (carregandoObjeto && x === bolinhaAzul.x && y === bolinhaAzul.y) {
                         jogoFinalizado = true;
                         setTimeout(() => {
                             desenharMatriz(); // Redesenhar matriz após atingir o objetivo
@@ -314,7 +314,7 @@
                                     if (nivelAtual === 2 || nivelAtual === 3) {
                                         document.getElementById('cmds').textContent ="descer(n), subir(n), esquerda(n), direita(n), capturar(), pular(comando(n))";
                                         setTimeout(() => {
-                                            alert(`Parabéns! Você completou o nível ${nivelAtual}!\nPróximo nível: ${nivelAtual + 1}\n\nFunção desbloqueada: pular(comando(n))`);
+                                            alert(`Parabéns! Você completou o nível ${nivelAtual}!\nPróximo nível: ${nivelAtual + 1}\n\nComando desbloqueado: pular(comando(n))`);
                                             jogoFinalizado = false;
                                             carregarNovoNivel();
                                         
@@ -413,12 +413,12 @@
         const novoJogo = () => {
             x = 0;
             y = 0;
-            carregandoPreta = false;
+            carregandoObjeto = false;
             jogoFinalizado = false;
-            bolinhaPreta = niveis[nivelAtual].bolinhaPreta;
+            quadradinho = niveis[nivelAtual].quadradinho;
             bolinhaAzul = niveis[nivelAtual].bolinhaAzul;
             obstaculos = gerarObstaculos();
-            guardaPosBolinhaPreta = { x: bolinhaPreta.x, y: bolinhaPreta.y };
+            guardaPosquadradinho = { x: quadradinho.x, y: quadradinho.y };
             nmrCasasPercorridas = 0;
             desenharMatriz();
             document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
@@ -429,9 +429,9 @@
         const voltarInicio = () => {
             x = 0;
             y = 0;
-            carregandoPreta = false;
+            carregandoObjeto = false;
             jogoFinalizado = false;
-            bolinhaPreta = { x: niveis[nivelAtual].bolinhaPreta.x, y: niveis[nivelAtual].bolinhaPreta.y };
+            quadradinho = { x: niveis[nivelAtual].quadradinho.x, y: niveis[nivelAtual].quadradinho.y };
             desenharMatriz();
             nmrCasasPercorridas = 0;
             document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
@@ -443,21 +443,22 @@
 
        const info = () => {
                alert(
-                    'Bem-vindo(a) ao Game Ball!\n' +
-                    'Seu objetivo é entregar a bolinha preta à bolinha azul,'+ 
-                    'utilizando os comandos disponíveis.\n' +
-                    'Dicas importantes:\n' +
+                    'BEM-VINDO(A) AO GAME BALL !!!\n\n' +
+                    'Seu objetivo é entregar o objeto (quadradinho)\n'+
+                    'para a bolinha azul, utilizando os comandos disponíveis.\n' + 
+                    'DICAS IMPORTANTES:\n' +
                     '- Use sua lógica para planejar os movimentos com antecedência;\n' +
                     '- Preste atenção à sintaxe dos comandos;\n' +
-                    '- Insira os comandos um após o outro, separados por vírgula.\n\n'
+                    '- Insira os comandos um após o outro, separados por vírgula.\n'+
+		    '----> BOM JOGO !!!'
                );
        };
         const carregarNovoNivel = () => {
             // Redefine as variáveis e ajusta o nível
             x = 0;
             y = 0;
-            carregandoPreta = false;
-            bolinhaPreta = niveis[nivelAtual].bolinhaPreta;
+            carregandoObjeto = false;
+            quadradinho = niveis[nivelAtual].quadradinho;
             bolinhaAzul = niveis[nivelAtual].bolinhaAzul;
             obstaculos = gerarObstaculos();
             nmrCasasPercorridas = 0;
@@ -499,4 +500,3 @@
     </script>
 </body>
 </html>
-
