@@ -226,6 +226,8 @@
         
             const comandos = document.getElementById('entradaComando').value.trim().toLowerCase().replace(/\s+/g, '').split(',');
         
+            document.getElementById('entradaComando').disabled = true;	
+
             let i = 0;
         
             const processarComando = () => {
@@ -323,7 +325,7 @@
                                     if (nivelAtual === 2 || nivelAtual === 3) {
                                         document.getElementById('cmds').textContent ="descer(n), subir(n), esquerda(n), direita(n), capturar(), pular(comando(n))";
                                         setTimeout(() => {
-                                            alert(`Parabéns! Você completou o nível ${nivelAtual}!\nPróximo nível: ${nivelAtual + 1}\n\nComando desbloqueado: pular(comando(n))`);
+                                            alert(`Parabéns! Você completou o nível ${nivelAtual}!\n\nPróximo nível:   ${nivelAtual + 1} 🚀\n\nComando desbloqueado:  pular(comando(n))`);
                                             jogoFinalizado = false;
                                             carregarNovoNivel();
                                         
@@ -333,7 +335,7 @@
                                     
                                     
                                     setTimeout(() => {
-                                        alert(`Parabéns! Você completou o nível ${nivelAtual}!\nPróximo nível: ${nivelAtual + 1}`);
+                                        alert(`Parabéns! Você completou o nível ${nivelAtual} !!!\nPróximo nível:   ${nivelAtual + 1} 🚀`);
                                         jogoFinalizado = false;
                                         carregarNovoNivel();
                                         
@@ -343,7 +345,7 @@
                                     
                                 } else {
                                     setTimeout(() => {
-                                        alert('Parabéns! Você completou todos níveis!');
+                                        alert("Parabéns! 🎉🎉🎉 Você concluiu todos os níveis !!!");
                                     }, 100);  
                                     limparCampo();
 				    document.getElementById('entradaComando').disabled = true;
@@ -369,7 +371,10 @@
 
 
         const moverGradualmente = (direcao, quantidade, callback) => {
+        
             let passos = 0;
+	        document.getElementById('entradaComando').disabled = true;
+	        
             const intervalo = setInterval(() => {
                 let novoX = x, novoY = y;
         
@@ -433,7 +438,7 @@
             desenharMatriz();
             document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
             limparCampo();
-	    document.getElementById('entradaComando').disabled = false;
+	        document.getElementById('entradaComando').disabled = false;
 
         };
 
@@ -446,6 +451,7 @@
             desenharMatriz();
             nmrCasasPercorridas = 0;
             document.getElementById('casas-percorridas').textContent = `Casas percorridas: ${nmrCasasPercorridas}`;
+	        document.getElementById('entradaComando').disabled = false;            
         };
         
         const limparCampo = () => {
@@ -465,9 +471,10 @@
                );
        };
         const carregarNovoNivel = () => {
-            // Redefine as variáveis e ajusta o nível
             x = 0;
             y = 0;
+	        document.getElementById('entradaComando').disabled = false; 
+	        
             carregandoObjeto = false;
             quadradinho = niveis[nivelAtual].quadradinho;
             bolinhaAzul = niveis[nivelAtual].bolinhaAzul;
