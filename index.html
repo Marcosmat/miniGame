@@ -93,10 +93,11 @@
 	<div id="nivel-atual">Nível atual: 1</div>
         <div id="casas-percorridas">Casas percorridas: 0</div>
         <p>Comandos disponíveis: <br>
-            descer(n), subir(n), esquerda(n), direita(n), capturar()
+            <div id="cmds">descer(n), subir(n), esquerda(n), direita(n), capturar() </div>
+            
         </p><br><button onclick="info()" style="background-color: black; color: white; font-weight: bold; font-size: 20px; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;">?</button>
 
-        <button onclick="novoJogo()" style="font-weight: bold; background-color: lightblue; color: black;">Novo jogo</button>
+        <button onclick="novoJogo()" style="font-weight: bold; background-color: lightblue; color: black;">Reiniciar nível</button>
         <input type="text" id="entradaComando" placeholder="Digite os comandos aqui">
         <button onclick="executarComandos()" style="font-weight: bold; background-color: lightgreen; color: black; padding: 12px 10px;">Executar</button>
     </div>
@@ -208,19 +209,36 @@
         };
 
         const executarComandos = () => {
+        
+            if(document.getElementById('entradaComando').value === ''){
+                alert('Sem comandos para executar!');
+                return;
+            }
+        
             const comandos = document.getElementById('entradaComando').value.trim().toLowerCase().replace(/\s+/g, '').split(',');
-
+        
             let i = 0;
-
+        
             const processarComando = () => {
+           
                 if (i < comandos.length) {
                     const comando = comandos[i].trim();
                     const match = comando.match(/^(descer|subir|esquerda|direita)\((\d+)\)$/);
-
-                    if (match) {                
+                    const matchPular = comando.match(/^pular\((subir|descer|esquerda|direita)\((\d+)\)\)$/);
+        
+                    if (match) {
                         const direcao = match[1];
                         const quantidade = parseInt(match[2]);
+                        
+                        if(quantidade > (niveis[nivelAtual].tamanho - 1) || quantidade <= 0){
+                            alert("Parâmetro inválido na função!!!");
+                            voltarInicio();
+                            return;
+                        }
+                        
+                        
                         moverGradualmente(direcao, quantidade, () => {
+                            // Somente após o movimento ser concluído
                             i++;
                             processarComando();
                         });
@@ -228,7 +246,6 @@
                         if (x === bolinhaPreta.x && y === bolinhaPreta.y && !carregandoPreta) {
                             carregandoPreta = true;
                             bolinhaPreta = { x: -1, y: -1 }; // Remove a bolinha preta da matriz
-                            desenharMatriz();
                         } else {
                             alert('Erro ao capturar bolinha em local vazio! Reiniciando...');
                             voltarInicio();
@@ -236,50 +253,88 @@
                         }
                         i++;
                         processarComando();
-                    } else {
-                        alert('Erro de sintaxe! (Comando inválido)');
+                        
+                    }else if (matchPular) {
+                        const direcao = matchPular[1];
+                        const passos = parseInt(matchPular[2]);
+                        
+                        if(passos > (niveis[nivelAtual].tamanho - 1) || passos <= 0){
+                            alert("Parâmetro inválido na função!!!");
+                            voltarInicio();
+                            return;
+                        }                        
+                        
+                        switch (direcao) {
+                            case "subir":
+                            x -= passos;
+                            break;
+                            
+                            case "descer":
+                            x += passos;
+                            break;
+                            case "esquerda":
+                            y -= passos;
+                            break;
+                            case "direita":
+                            y += passos;
+                            break;
+                        }                
+                        
+        
+                        desenharMatriz();
+                        i++;
+                                                           
+                        processarComando();
+                    }
+        
+                    else {
+                        alert('Erro de sintaxe! (Comando inválido) Reiniciando...');
                         voltarInicio();
                         return;
                     }
                 } else {
                     if (carregandoPreta && x === bolinhaAzul.x && y === bolinhaAzul.y) {
                         jogoFinalizado = true;
-                        desenharMatriz();
-                        if (entrega === true) {
-                        
-                            if(nivelAtual < 2){
-                                ajustarMatriz();
-                                desenharMatriz();
-                                nivelAtual++;
-                                
-                                setTimeout(() => {
-			            alert(`Parabéns! Você completou o nível ${nivelAtual}!\nPróximo nível: ${nivelAtual + 1}`);
-                                }, 100);                                  
-                                
-
-		                 jogoFinalizado = false;
-					            
-                                setTimeout(() => {
-                                    carregarNovoNivel();
-                                }, 100);     
-  
-                                
-                            }else{
-                                setTimeout(() => {
-                                    alert('Parabéns! Você completou todos níveis!');
-                                }, 100);                                 
+                        setTimeout(() => {
+                            desenharMatriz(); // Redesenhar matriz após atingir o objetivo
+                            if (entrega) {
+                                if (nivelAtual < 2) {
+                                    nivelAtual++;
+                                    
+                                    if (nivelAtual === 2 || nivelAtual === 3) {
+                                        document.getElementById('cmds').textContent ="descer(n), subir(n), esquerda(n), direita(n), capturar(), pular(comando(n))";
+                                    }                                    
+                                    
+                                    
+                                    setTimeout(() => {
+                                        alert(`Parabéns! Você completou o nível ${nivelAtual}!\nPróximo nível: ${nivelAtual + 1}`);
+                                        jogoFinalizado = false;
+                                        carregarNovoNivel();
+                                        
+                                    }, 100);
+                                    
+                                    
+                                    
+                                } else {
+                                    setTimeout(() => {
+                                        alert('Parabéns! Você completou todos níveis!');
+                                    }, 100);  
+                                    limparCampo();
+                                }
                             }
-                        }
+                        }, 100);
                     } else {
-                        alert('Objetivo não alcançado! Voltando ao inicio...');
-                        voltarInicio();
+                        setTimeout(() => {
+                            alert("Objetivo não alcançado! Reiniciando...");
+                            voltarInicio();                            
+                        }, 100);   
+
                     }
                 }
             };
-
+        
             processarComando();
         };
-
 
 
         const moverGradualmente = (direcao, quantidade, callback) => {
@@ -318,8 +373,8 @@
             y = 0;
             carregandoPreta = false;
             jogoFinalizado = false;
-            bolinhaPreta = niveis[0].bolinhaPreta;
-            bolinhaAzul = niveis[0].bolinhaAzul;
+            bolinhaPreta = niveis[nivelAtual].bolinhaPreta;
+            bolinhaAzul = niveis[nivelAtual].bolinhaAzul;
             obstaculos = gerarObstaculos();
             guardaPosBolinhaPreta = { x: bolinhaPreta.x, y: bolinhaPreta.y };
             nmrCasasPercorridas = 0;
@@ -369,7 +424,22 @@
             desenharMatriz();
             limparCampo();
     	    document.getElementById('nivel-atual').textContent = `Nível atual: ${nivelAtual + 1}`;
-        };       
+        };     
+
+        const teletransportar = (destinoX, destinoY) => {
+            // Verificar se a posição de destino está livre de obstáculos
+            if (obstaculos.some(obstaculo => obstaculo.x === destinoX && obstaculo.y === destinoY)) {
+                alert('Destino bloqueado por obstáculo! Reiniciando...');
+                return; // Interrompe o teletransporte
+            }
+        
+            // Atualizar as coordenadas da bolinha
+            x = destinoX;
+            y = destinoY;
+        
+            // Atualizar o desenho da matriz
+            desenharMatriz();
+        };
 
         ajustarMatriz();
         desenharMatriz();
