@@ -242,7 +242,7 @@
                         const quantidade = parseInt(match[2]);
                         
                         if(quantidade > (niveis[nivelAtual].tamanho - 1) || quantidade <= 0){
-                            alert("Parâmetro inválido na função!!!");
+                            alert("Parâmetro inválido no comando!!!");
                             voltarInicio();
                             return;
                         }
@@ -258,7 +258,7 @@
                             carregandoObjeto = true;
                             quadradinho = { x: -1, y: -1 }; // Remove o quadradinho da matriz
                         } else {
-                            alert('Erro ao capturar bolinha em local vazio! Reiniciando...');
+                            alert('Erro ao capturar! Reiniciando...');
                             voltarInicio();
                             return;
                         }
@@ -458,18 +458,18 @@
             document.getElementById('entradaComando').value = '';
         };
 
-       const info = () => {
-               alert(
-                    'BEM-VINDO(A) AO GAME BALL !!!\n\n' +
-                    'Seu objetivo é entregar o objeto (quadradinho)\n'+
-                    'para a bolinha azul, utilizando os comandos disponíveis.\n' + 
-                    'DICAS IMPORTANTES:\n' +
-                    '- Use sua lógica para planejar os movimentos com antecedência;\n' +
-                    '- Preste atenção à sintaxe dos comandos;\n' +
-                    '- Insira os comandos um após o outro, separados por vírgula.\n'+
-		    '----> BOM JOGO !!!'
-               );
-       };
+        const info = () => {
+            alert(
+                'BEM-VINDO(A) AO GAME BALL !!!\n\n' +
+                'Você controla a bolinha vermelha e deve levar\n'+ 
+                'o bloquinho para a azul, utilizando os comandos disponíveis.\n\n' +
+                'DICAS IMPORTANTES:\n' +
+                '- Utilize sua lógica para planejar os movimentos;\n' +
+                '- Use os comandos corretamente, seguindo a sintaxe;\n' +
+                '- Os comandos devem estar separados por vírgula.\n\n'
+            );
+        };
+
         const carregarNovoNivel = () => {
             x = 0;
             y = 0;
@@ -494,7 +494,7 @@
                 return; // Interrompe o teletransporte
             }
         
-            // Atualizar as coordenadas da bolinha
+            // Atualizar as coordenadas do bloquinho
             x = destinoX;
             y = destinoY;
         
