@@ -301,6 +301,8 @@
                             voltarInicio(); 
                             return;
                         }
+                        
+                        nmrCasasPercorridas++;
         
                         desenharMatriz();
                         i++;
@@ -497,9 +499,9 @@
             // Atualizar as coordenadas do bloquinho
             x = destinoX;
             y = destinoY;
-        
+            
             // Atualizar o desenho da matriz
-            desenharMatriz();
+            desenharMatriz();          
         };
         
         const estaDentroDosLimites = (novoX, novoY) => {
