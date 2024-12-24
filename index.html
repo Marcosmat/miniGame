@@ -91,6 +91,14 @@
 <body>
     <div id="matriz"></div>
 
+    <audio id="nextLevel" autoplay>
+        <source src="success.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="completed" autoplay>
+        <source src="finished.mp3" type="audio/mpeg">
+    </audio>
+
     <div id="comandos">
 
 	<div id="nivel-atual">Nível atual: 1</div>
@@ -321,7 +329,12 @@
                         setTimeout(() => {
                             desenharMatriz(); // Redesenhar matriz após atingir o objetivo
                             if (entrega) {
+
                                 if (nivelAtual < 2) {
+                                    
+                                    const audio = document.getElementById("nextLevel");
+                                    audio.play();
+                                    
                                     nivelAtual++;
                                     
                                     if (nivelAtual === 2 || nivelAtual === 3) {
@@ -346,6 +359,10 @@
                                     
                                     
                                 } else {
+                                    
+                                    const audio = document.getElementById("completed");
+                                    audio.play();
+                                    
                                     setTimeout(() => {
                                         alert("Parabéns! 🎉🎉🎉 Você concluiu todos os níveis !!!");
                                     }, 100);  
